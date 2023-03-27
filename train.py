@@ -142,7 +142,7 @@ if __name__ == '__main__':
         cur_lr = adjust_lr(optimizer, opt.lr, epoch, opt.decay_rate, opt.decay_epoch)
         writer.add_scalar('learning_rate', cur_lr, global_step=epoch)
         # train
-        train(val_Dataloader, model, optimizer, epoch,save_path)
+        train(train_Dataloader, model, optimizer, epoch,save_path)
         
         #test
         val(val_Dataloader,model,epoch,save_path)
