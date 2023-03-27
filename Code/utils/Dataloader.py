@@ -68,8 +68,8 @@ def get_dataloader():
     #     csv = pd.read_pickle(imagePath[1])
     #     print(csv)
 
-    # dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.Resize((384,512)),transforms.ToTensor()]))
-    dataset = BEHAVE(imagePaths, transform=transforms.ToTensor())
+    dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.Resize((384,512)),transforms.ToTensor()]))
+#     dataset = BEHAVE(imagePaths, transform=transforms.ToTensor())
 
 
     #trainDataset, valDataset = random_split(dataset, [12612,100 ])
@@ -77,8 +77,8 @@ def get_dataloader():
 
 
 
-    trainLoader = DataLoader(trainDataset, batch_size=1, shuffle=True, num_workers=4)
-    valLoader = DataLoader(valDataset, batch_size=1, shuffle=True, num_workers=4)
+    trainLoader = DataLoader(trainDataset, batch_size=20, shuffle=True, num_workers=4)
+    valLoader = DataLoader(valDataset, batch_size=20, shuffle=True, num_workers=4)
 
     return trainLoader, valLoader
 
