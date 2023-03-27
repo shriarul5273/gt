@@ -77,8 +77,8 @@ def get_dataloader():
 
 
 
-    trainLoader = DataLoader(trainDataset, batch_size=3, shuffle=True, num_workers=4)
-    valLoader = DataLoader(valDataset, batch_size=3, shuffle=True, num_workers=4)
+    trainLoader = DataLoader(trainDataset, batch_size=2, shuffle=True, num_workers=4)
+    valLoader = DataLoader(valDataset, batch_size=2, shuffle=True, num_workers=4)
 
     return trainLoader, valLoader
 
