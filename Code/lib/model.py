@@ -249,8 +249,8 @@ class SPNet(nn.Module):
 
         self.rgb_gcm_0    = GCM(64+32,  channel)        
         #full size
-        self.rgb_conv_out = nn.Conv2d(channel, 20, kernel_size=7, stride=4, padding=0)
-        # self.rgb_conv_out = nn.Conv2d(channel, 20, kernel_size=5, stride=1, padding=0)
+#         self.rgb_conv_out = nn.Conv2d(channel, 20, kernel_size=7, stride=4, padding=0)
+        self.rgb_conv_out = nn.Conv2d(channel, 20, kernel_size=5, stride=1, padding=0)
 
         
                
@@ -279,10 +279,10 @@ class SPNet(nn.Module):
         x_rgb_02    = self.rgb_gcm_0(x_rgb_0_cat)   
 
 
-        # rgb_out     = self.upsample_4(self.rgb_conv_out(x_rgb_02))
+        rgb_out     = self.upsample_4(self.rgb_conv_out(x_rgb_02))
 
 
-        rgb_out     = self.rgb_conv_out(self.upsample_4(x_rgb_02))
+#         rgb_out     = self.rgb_conv_out(self.upsample_4(x_rgb_02))
 
         
 
