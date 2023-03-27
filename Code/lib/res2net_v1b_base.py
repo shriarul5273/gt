@@ -8,7 +8,7 @@ __all__ = ['Res2Net', 'res2net50_v1b', 'res2net101_v1b']
 
 
 model_urls = {
-    'res2net50_v1b_26w_4s': 'https://huggingface.co/shriarul5273/res2netx50/raw/main/res2net50_v1b_26w_4s-3cf99910.pth',
+    'res2net50_v1b_26w_4s': 'https://huggingface.co/shriarul5273/res2netx50/resolve/main/res2net50_v1b_26w_4s-3cf99910.pth',
     'res2net101_v1b_26w_4s': 'https://shanghuagao.oss-cn-beijing.aliyuncs.com/res2net/res2net101_v1b_26w_4s-0812c246.pth',
 }
 
