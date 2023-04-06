@@ -279,10 +279,10 @@ class SPNet(nn.Module):
         x_rgb_02    = self.rgb_gcm_0(x_rgb_0_cat)   
 
 
-        rgb_out     = self.upsample_4(self.rgb_conv_out(x_rgb_02))
+        #rgb_out     = self.upsample_4(self.rgb_conv_out(x_rgb_02))
 
 
-#         rgb_out     = self.rgb_conv_out(self.upsample_4(x_rgb_02))
+        rgb_out     = self.rgb_conv_out(self.upsample_4(x_rgb_02))
 
         
 
