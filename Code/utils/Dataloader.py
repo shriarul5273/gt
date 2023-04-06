@@ -75,7 +75,7 @@ def get_dataloader():
 
 
     # trainDataset, valDataset = random_split(dataset, [12612,100 ])
-    trainDataset, valDataset = random_split(dataset, [int(0.8*len(dataset)), len(dataset)-int(0.2*len(dataset))])
+    trainDataset, valDataset = random_split(dataset, [10712, 2000])
 
 
     trainLoader = DataLoader(trainDataset, batch_size=10, shuffle=True, num_workers=4)
