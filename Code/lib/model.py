@@ -332,7 +332,7 @@ class SPNet(nn.Module):
 
 if __name__ == '__main__':
     model = SPNet()
-    image  = torch.randn(1, 3, 1536, 2048) #full size
-    # image  = torch.randn(1, 3, 384, 512)
+    # image  = torch.randn(1, 3, 1536, 2048) #full size
+    image  = torch.randn(1, 3, 384, 512)
     output = model(image)
     print(output.size())

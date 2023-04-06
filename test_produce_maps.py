@@ -1,63 +1,80 @@
 import torch
-import torch.nn.functional as F
-import sys
-import torch.nn as nn
-import numpy as np
-import os, argparse
-import cv2
+import os
 from Code.lib.model import SPNet
-from Code.utils.data import test_dataset
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--testsize', type=int, default=352, help='testing size')
-parser.add_argument('--gpu_id',   type=str, default='0', help='select gpu id')
-parser.add_argument('--test_path',type=str, default='./Data/TestDataset/',help='test dataset path')
-opt = parser.parse_args()
-
-dataset_path = opt.test_path
-
-#set device for test
-if opt.gpu_id=='0':
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-    print('USE GPU 0')
- 
-
+from PIL import Image
+from glob import iglob
+import json
+from torchvision import transforms
+import pandas as pd
+from scipy.spatial.transform import Rotation as R
+from tqdm import tqdm
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+import pickle as pkl
+import numpy as np
 #load the model
 model = SPNet(32,50)
 model.cuda()
 
-model.load_state_dict(torch.load('./Checkpoint/SPNet/SPNet_model_best.pth'))
+model.load_state_dict(torch.load('/home/shriarul/Downloads/BEHAVE_Object_detection/SPNet/Checkpoint/SPNet/SPNet_epoch_best.pth'))
 model.eval()
 
-#test
-test_datasets = ['NJU2K','NLPR', 'DES', 'SSD','SIP', 'STERE'] 
 
-test_datasets = ['STERE'] 
+category_dict = pd.read_pickle('cat_dict.pkl')
+
+def get_testdataloader():
+    imagePaths = []
+    # paths = iglob('/kaggle/input/behave/*')
+    paths = iglob('/home/shriarul/Downloads/BEHAVE_Object_detection/test_images/*')
+    paths = [x for x in paths if os.path.isdir(x)]    
+    for path in paths:
+        info = json.load(open(os.path.join(path, 'info.json')))
+        cat = info['cat']
+        gender = info['gender']
+        subPaths = iglob(os.path.join(path, '*'))
+        subPaths = [x for x in subPaths if os.path.isdir(x)]
+        for subPath in subPaths:
+            xpath = os.path.join(subPath, 'k1.color.jpg')
+            imagePaths.append((xpath,cat,gender))
+
+    return imagePaths
 
 
-for dataset in test_datasets:
-    save_path = './test_maps/SPNet/' + dataset + '/'
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
-        
-    image_root  = dataset_path + dataset + '/RGB/'
-    gt_root     = dataset_path + dataset + '/GT/'
-    depth_root  = dataset_path + dataset + '/depth/'
-    test_loader = test_dataset(image_root, gt_root,depth_root, opt.testsize)
-    for i in range(test_loader.size):
-        image, gt,depth, name, image_for_post = test_loader.load_data()
-        
-        gt      = np.asarray(gt, np.float32)
-        gt     /= (gt.max() + 1e-8)
-        image   = image.cuda()
-        depth   = depth.cuda()
-        pre_res = model(image,depth)
-        res     = pre_res[2]     
-        res     = F.upsample(res, size=gt.shape, mode='bilinear', align_corners=False)
-        res     = res.sigmoid().data.cpu().numpy().squeeze()
-        res     = (res - res.min()) / (res.max() - res.min() + 1e-8)
-        
-        print('save img to: ',save_path+name)
-        cv2.imwrite(save_path+name,res*255)
-    print('Test Done!')
+imagePaths = get_testdataloader()
+
+
+# for i,imagePath in enumerate(imagePaths):
+#     image = Image.open(imagePath[0])
+#     print(imagePath[0])
+
+transform = transforms.Compose([transforms.Resize((384,512)),transforms.ToTensor()])
+
+
+k = {}
+
+for imagePath in tqdm(imagePaths):
+    image = Image.open(imagePath[0])
+    image = transform(image)
+    image = image.unsqueeze(dim=0).cuda()
+    output = model(image)
+    j = os.path.normpath(imagePath[0]).split(os.sep)
+    rotation = R.from_rotvec(output[0,category_dict[imagePath[1]],0,:].cpu().detach().numpy()).as_matrix()
+    translation = output[0,category_dict[imagePath[1]],1,:].cpu().detach().numpy()
+    if j[-3] not in k.keys():
+        k[j[-3]] = {}
+        k[j[-3]]['obj_rots'] = np.array([rotation])
+        k[j[-3]]['obj_trans'] = np.array([translation])
+        k[j[-3]]['obj_scales'] = np.array([1])
+        k[j[-3]]['frames'] = [j[-2]]
+        k[j[-3]]['gender'] = imagePath[2]
+    
+    else:
+        k[j[-3]]['obj_rots']  = np.vstack((k[j[-3]]['obj_rots'],np.array([rotation])))
+        k[j[-3]]['obj_trans'] = np.vstack((k[j[-3]]['obj_trans'],np.array([translation])))
+        k[j[-3]]['obj_scales'] = np.append(k[j[-3]]['obj_scales'],1)
+        k[j[-3]]['frames'].append(j[-2])
+
+    
+pd.to_pickle(k,'test.pkl')
+
+pkl.dump(k, open('test_pk.pkl', 'wb'))

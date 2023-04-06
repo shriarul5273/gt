@@ -8,6 +8,7 @@ from torchvision.utils import make_grid
 from Code.lib.model import SPNet
 from Code.utils.Dataloader import get_dataloader
 from Code.utils.utils import clip_gradient, adjust_lr
+from Code.utils.loss_funcction import SetCriterion
 from tensorboardX import SummaryWriter
 import logging
 import torch.backends.cudnn as cudnn
@@ -43,7 +44,7 @@ if not os.path.exists(save_path):
 
 #load data
 print('load data...')
-train_Dataloader, val_Dataloader = get_dataloader()
+train_Dataloader, val_Dataloader  = get_dataloader()
 
 
 logging.basicConfig(filename=save_path+'log.log',format='[%(asctime)s-%(filename)s-%(levelname)s:%(message)s]', level = logging.INFO,filemode='a',datefmt='%Y-%m-%d %I:%M:%S %p')
@@ -59,8 +60,7 @@ best_epoch = 0
 
 
 #set loss function
-l1Loss = nn.L1Loss()
-l2Loss = nn.MSELoss()
+criterion = SetCriterion(torch.device("cuda"))
 
 
 
@@ -81,12 +81,8 @@ def train(train_loader, model, optimizer, epoch,save_path):
         ##
         pre_res  = model(images)
         
-        loss1    = l1Loss(pre_res,gts) 
-        loss2    = l2Loss(pre_res,gts) 
+        loss    = criterion(pre_res, gts)
         
-        loss_seg = loss1 + loss2 
-
-        loss = loss_seg 
         loss.backward()
 
         clip_gradient(optimizer, opt.clip)
@@ -95,10 +91,10 @@ def train(train_loader, model, optimizer, epoch,save_path):
         epoch_step+=1
         loss_all+=loss.data
         if i % 50 == 0 or i == total_step or i==1:
-            print('{} Epoch [{:03d}/{:03d}], Step [{:04d}/{:04d}], Loss1: {:.4f} Loss2: {:0.4f}'.
-                format(datetime.now(), epoch, opt.epoch, i, total_step, loss1.data, loss2.data))
+            print('{} Epoch [{:03d}/{:03d}], Step [{:04d}/{:04d}], Loss: {:.4f} '.
+                format(datetime.now(), epoch, opt.epoch, i, total_step, loss.data))
             logging.info('#TRAIN#:Epoch [{:03d}/{:03d}], Step [{:04d}/{:04d}], Loss1: {:.4f} Loss2: {:0.4f}'.
-                format( epoch, opt.epoch, i, total_step, loss1.data, loss2.data))
+                format( epoch, opt.epoch, i, total_step, loss.data))
             
     loss_all/=epoch_step
     logging.info('#TRAIN#:Epoch [{:03d}/{:03d}], Loss_AVG: {:.4f}'.format( epoch, opt.epoch, loss_all))

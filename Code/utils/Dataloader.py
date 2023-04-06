@@ -36,7 +36,8 @@ class BEHAVE(Dataset):
 
 def get_dataloader():
     imagePaths = []
-    paths = iglob('/kaggle/input/behave/*')
+    # paths = iglob('/kaggle/input/behave/*')
+    paths = iglob('/home/shriarul/Downloads/BEHAVE_Object_detection/train_part1/*')
     paths = [x for x in paths if os.path.isdir(x)]
     category  = []
     for path in paths:
@@ -68,17 +69,17 @@ def get_dataloader():
     #     csv = pd.read_pickle(imagePath[1])
     #     print(csv)
 
-    dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.Resize((384,512)),transforms.ToTensor()]))
-#     dataset = BEHAVE(imagePaths, transform=transforms.ToTensor())
+    # dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.Resize((384,512)),transforms.ToTensor()]))
+    # dataset = BEHAVE(imagePaths, transform=transforms.ToTensor())
+    dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.ToTensor()]))
 
 
-    #trainDataset, valDataset = random_split(dataset, [12612,100 ])
-    trainDataset, valDataset = random_split(dataset, [10712,2000 ])
+    # trainDataset, valDataset = random_split(dataset, [12612,100 ])
+    trainDataset, valDataset = random_split(dataset, [int(0.8*len(dataset)), len(dataset)-int(0.2*len(dataset))])
 
 
-
-    trainLoader = DataLoader(trainDataset, batch_size=20, shuffle=True, num_workers=4)
-    valLoader = DataLoader(valDataset, batch_size=20, shuffle=True, num_workers=4)
+    trainLoader = DataLoader(trainDataset, batch_size=1, shuffle=True, num_workers=4)
+    valLoader = DataLoader(valDataset, batch_size=1, shuffle=True, num_workers=4)
 
     return trainLoader, valLoader
 
@@ -92,13 +93,13 @@ def get_dataloader():
 # print(d[2])
 
 
-# dataloaders, _ = get_dataloader()
+dataloaders, _ = get_dataloader()
 
 
 # print(len(dataloaders))
 
-# d = next(iter(dataloaders))
+d = next(iter(dataloaders))
 
 # print(d[0].shape)
-# print(d[1].shape)
+print(d[1].shape)
 # print(d[2])
