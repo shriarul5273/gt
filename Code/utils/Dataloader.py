@@ -69,8 +69,8 @@ def get_dataloader():
     #     csv = pd.read_pickle(imagePath[1])
     #     print(csv)
 
-    # dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.Resize((384,512)),transforms.ToTensor()]))
-    # dataset = BEHAVE(imagePaths, transform=transforms.ToTensor())
+    dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.Resize((384,512)),transforms.ToTensor()]))
+    #dataset = BEHAVE(imagePaths, transform=transforms.ToTensor())
     dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.ToTensor()]))
 
 
