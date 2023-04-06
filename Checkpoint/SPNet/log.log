@@ -1,0 +1,3 @@
+[2023-04-06 09:48:19 PM-train.py-INFO:BBSNet_unif-Train]
+[2023-04-06 09:48:19 PM-train.py-INFO:Config]
+[2023-04-06 09:48:19 PM-train.py-INFO:epoch:10;lr:0.0001;batchsize:10;trainsize:352;clip:0.5;decay_rate:0.1;load:None;save_path:./Checkpoint/SPNet/;decay_epoch:60]

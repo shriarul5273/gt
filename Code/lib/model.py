@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 from torch.nn import functional as F
-from Code.lib.res2net_v1b_base import Res2Net_model
+from res2net_v1b_base import Res2Net_model
 
 def maxpool():
     pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
@@ -249,7 +249,7 @@ class SPNet(nn.Module):
 
         self.rgb_gcm_0    = GCM(64+32,  channel)        
         #full size
-#         self.rgb_conv_out = nn.Conv2d(channel, 20, kernel_size=7, stride=4, padding=0)
+        #self.rgb_conv_out = nn.Conv2d(channel, 20, kernel_size=7, stride=4, padding=0)
         self.rgb_conv_out = nn.Conv2d(channel, 20, kernel_size=5, stride=1, padding=0)
 
         
@@ -279,10 +279,10 @@ class SPNet(nn.Module):
         x_rgb_02    = self.rgb_gcm_0(x_rgb_0_cat)   
 
 
-        #rgb_out     = self.upsample_4(self.rgb_conv_out(x_rgb_02))
+        rgb_out     = self.upsample_4(self.rgb_conv_out(x_rgb_02))
 
-
-        rgb_out     = self.rgb_conv_out(self.upsample_4(x_rgb_02))
+        # print(x_rgb_02.size())
+        # rgb_out     = self.rgb_conv_out(self.upsample_4(x_rgb_02))
 
         
 
