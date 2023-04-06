@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torchvision.models as models
 from torch.nn import functional as F
-from res2net_v1b_base import Res2Net_model
+from Code.lib.res2net_v1b_base import Res2Net_model
 
 def maxpool():
     pool = nn.MaxPool2d(kernel_size=2, stride=2, padding=0)
