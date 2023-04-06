@@ -78,8 +78,8 @@ def get_dataloader():
     trainDataset, valDataset = random_split(dataset, [int(0.8*len(dataset)), len(dataset)-int(0.2*len(dataset))])
 
 
-    trainLoader = DataLoader(trainDataset, batch_size=1, shuffle=True, num_workers=4)
-    valLoader = DataLoader(valDataset, batch_size=1, shuffle=True, num_workers=4)
+    trainLoader = DataLoader(trainDataset, batch_size=10, shuffle=True, num_workers=4)
+    valLoader = DataLoader(valDataset, batch_size=10, shuffle=True, num_workers=4)
 
     return trainLoader, valLoader
 
