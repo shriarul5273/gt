@@ -36,8 +36,8 @@ class BEHAVE(Dataset):
 
 def get_dataloader():
     imagePaths = []
-    # paths = iglob('/kaggle/input/behave/*')
-    paths = iglob('/home/shriarul/Downloads/BEHAVE_Object_detection/train_part1/*')
+    paths = iglob('/kaggle/input/behave/*')
+    #paths = iglob('/home/shriarul/Downloads/BEHAVE_Object_detection/train_part1/*')
     paths = [x for x in paths if os.path.isdir(x)]
     category  = []
     for path in paths:
