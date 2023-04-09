@@ -83,8 +83,8 @@ def get_dataloader():
     # valLoader = DataLoader(valDataset, batch_size=1, shuffle=True, num_workers=4)
 
     
-    trainLoader = DataLoader(trainDataset, batch_size=4, shuffle=True, num_workers=2)
-    valLoader = DataLoader(valDataset, batch_size=4, shuffle=True, num_workers=2)
+    trainLoader = DataLoader(trainDataset, batch_size=12, shuffle=True, num_workers=2)
+    valLoader = DataLoader(valDataset, batch_size=12, shuffle=True, num_workers=2)
 
     return trainLoader, valLoader
 
