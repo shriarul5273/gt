@@ -24,7 +24,7 @@ class BEHAVE(Dataset):
         imagePath = self.imagePaths[index]
         image = Image.open(imagePath[0])
         csv = pd.read_pickle(imagePath[1])
-        a = torch.tensor([csv['angle'],csv['trans']], dtype=torch.float32)
+        a = torch.tensor(np.array([csv['angle'],csv['trans']]), dtype=torch.float32)
         y = torch.zeros((20,2,3), dtype=torch.float32)
         y[category_dict[imagePath[2]],:,:] = a
         if self.transform:
@@ -79,8 +79,12 @@ def get_dataloader():
     trainDataset, valDataset = random_split(dataset, [10712, 2000])
 
 
-    trainLoader = DataLoader(trainDataset, batch_size=1, shuffle=True, num_workers=4)
-    valLoader = DataLoader(valDataset, batch_size=1, shuffle=True, num_workers=4)
+    # trainLoader = DataLoader(trainDataset, batch_size=1, shuffle=True, num_workers=4)
+    # valLoader = DataLoader(valDataset, batch_size=1, shuffle=True, num_workers=4)
+
+    
+    trainLoader = DataLoader(trainDataset, batch_size=4, shuffle=True, num_workers=2)
+    valLoader = DataLoader(valDataset, batch_size=4, shuffle=True, num_workers=2)
 
     return trainLoader, valLoader
 
