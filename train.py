@@ -93,7 +93,7 @@ def train(train_loader, model, optimizer, epoch,save_path):
         if i % 50 == 0 or i == total_step or i==1:
             print('{} Epoch [{:03d}/{:03d}], Step [{:04d}/{:04d}], Loss: {:.4f} '.
                 format(datetime.now(), epoch, opt.epoch, i, total_step, loss.data))
-            logging.info('#TRAIN#:Epoch [{:03d}/{:03d}], Step [{:04d}/{:04d}], Loss1: {:.4f} Loss2: {:0.4f}'.
+            logging.info('#TRAIN#:Epoch [{:03d}/{:03d}], Step [{:04d}/{:04d}], Loss: {:.4f} '.
                 format( epoch, opt.epoch, i, total_step, loss.data))
             
     loss_all/=epoch_step

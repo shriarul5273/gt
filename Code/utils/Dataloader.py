@@ -37,7 +37,7 @@ class BEHAVE(Dataset):
 def get_dataloader():
     imagePaths = []
     paths = iglob('/kaggle/input/behave/*')
-    #paths = iglob('/home/shriarul/Downloads/BEHAVE_Object_detection/train_part1/*')
+    # paths = iglob('/home/shriarul/Downloads/Chore/train_part1/*')
     paths = [x for x in paths if os.path.isdir(x)]
     category  = []
     for path in paths:
@@ -71,10 +71,11 @@ def get_dataloader():
 
     dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.Resize((384,512)),transforms.ToTensor()]))
     #dataset = BEHAVE(imagePaths, transform=transforms.ToTensor())
-    dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.ToTensor()]))
+    # dataset = BEHAVE(imagePaths, transform=transforms.Compose([transforms.ToTensor()]))
 
 
     # trainDataset, valDataset = random_split(dataset, [12612,100 ])
+    # print(len(dataset))
     trainDataset, valDataset = random_split(dataset, [10712, 2000])
 
 
